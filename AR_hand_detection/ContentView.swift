@@ -8,9 +8,18 @@
 import SwiftUI
 
 struct ContentView: View {
+    // ?
+    @State private var overlayPoints: [CGPoint] = []
     var body: some View {
         ZStack{
-            CameraView().edgesIgnoringSafeArea(.all)
+            CameraView {
+              overlayPoints = $0
+            }
+            .overlay(
+              FingersOverlay(with: overlayPoints)
+                .foregroundColor(.orange)
+            )
+            .edgesIgnoringSafeArea(.all)
         }
     }
 }

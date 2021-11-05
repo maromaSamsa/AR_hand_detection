@@ -8,6 +8,8 @@
 import UIKit
 import AVFoundation
 import Vision
+import ARKit
+import RealityKit
 
 // handling exception, use "throw" to call this Error protocol
 enum AppError: Error {
@@ -33,9 +35,28 @@ final class CameraViewController: UIViewController{
       label: "CameraFeedOutput",
       qos: .userInteractive
     )
+    
+    // Hand detection request
+    private let handPoseRequest: VNDetectHumanHandPoseRequest = {
+        let request = VNDetectHumanHandPoseRequest()
+        request.maximumHandCount = 1
+        return request
+    }()
+    
+    // 1
+    var pointsProcessorHandler: (([CGPoint]) -> Void)?
+    func processPoints(_ fingerTips: [CGPoint]) {
+      // 2
+      let convertedPoints = fingerTips.map {
+        cameraView.previewLayer.layerPointConverted(fromCaptureDevicePoint: $0)
+      }
+      // 3
+      pointsProcessorHandler?(convertedPoints)
+    }
 
     /// Creates the view that the controller manages
     override func loadView() {
+        print("load view")
         view = CameraPreview()
     }
     
@@ -113,7 +134,51 @@ final class CameraViewController: UIViewController{
 }
 
 extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
-    public func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        var thumbTip: CGPoint?
+    public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        
+        var fingerJoints: [CGPoint] = []
+        
+        // call before exit function
+        defer {
+          DispatchQueue.main.sync {
+            self.processPoints(fingerJoints)
+          }
+        }
+
+        
+        let handler = VNImageRequestHandler(
+            cmSampleBuffer: sampleBuffer,
+            orientation: .up,
+            options: [:]
+        )
+        
+        do{
+            try handler.perform([handPoseRequest])
+            
+            guard let result = handPoseRequest.results?.prefix(1),
+                  !result.isEmpty
+            else{
+                return
+            }
+            
+            var recognizedPoints: [VNRecognizedPoint] = []
+            try result.forEach{ observation in
+                let allJoints = try observation.recognizedPoints(.all)
+                allJoints.forEach{ joint in
+                    recognizedPoints.append(joint.value)
+                }
+            }
+            
+            recognizedPoints.forEach{ point in
+                if point.confidence > 0.9 {
+                    fingerJoints.append(CGPoint(x: 1 - point.location.x, y: 1 - point.location.y))
+                }
+            }
+        }catch{
+            cameraFeedSession?.stopRunning()
+        }
+        
+        
+        
     }
 }

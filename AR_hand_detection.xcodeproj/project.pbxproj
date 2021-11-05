@@ -14,6 +14,7 @@
 		C70C8BDE270EEC35001EE73C /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70C8BDD270EEC35001EE73C /* CameraPreview.swift */; };
 		C70C8BE2270EF824001EE73C /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70C8BE1270EF824001EE73C /* CameraViewController.swift */; };
 		C70C8BE4270EF887001EE73C /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70C8BE3270EF887001EE73C /* CameraView.swift */; };
+		C7C01F872728208000D2B0A9 /* FingersOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C01F862728208000D2B0A9 /* FingersOverlay.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,8 @@
 		C70C8BDD270EEC35001EE73C /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
 		C70C8BE1270EF824001EE73C /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		C70C8BE3270EF887001EE73C /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		C7C01F862728208000D2B0A9 /* FingersOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FingersOverlay.swift; sourceTree = "<group>"; };
+		C7C01F88272A321100D2B0A9 /* ref.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ref.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,6 +45,7 @@
 		C70C8BC0270C2F10001EE73C = {
 			isa = PBXGroup;
 			children = (
+				C7C01F88272A321100D2B0A9 /* ref.md */,
 				C70C8BCB270C2F10001EE73C /* AR_hand_detection */,
 				C70C8BCA270C2F10001EE73C /* Products */,
 			);
@@ -58,6 +62,7 @@
 		C70C8BCB270C2F10001EE73C /* AR_hand_detection */ = {
 			isa = PBXGroup;
 			children = (
+				C7C01F862728208000D2B0A9 /* FingersOverlay.swift */,
 				C70C8BCC270C2F10001EE73C /* AR_hand_detectionApp.swift */,
 				C70C8BCE270C2F10001EE73C /* ContentView.swift */,
 				C70C8BD0270C2F11001EE73C /* Assets.xcassets */,
@@ -148,6 +153,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C70C8BDE270EEC35001EE73C /* CameraPreview.swift in Sources */,
+				C7C01F872728208000D2B0A9 /* FingersOverlay.swift in Sources */,
 				C70C8BE2270EF824001EE73C /* CameraViewController.swift in Sources */,
 				C70C8BCF270C2F10001EE73C /* ContentView.swift in Sources */,
 				C70C8BE4270EF887001EE73C /* CameraView.swift in Sources */,
