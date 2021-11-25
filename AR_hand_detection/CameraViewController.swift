@@ -13,10 +13,11 @@ import RealityKit
 
 // handling exception, use "throw" to call this Error protocol
 enum AppError: Error {
-  case captureSessionSetup(reason: String)
+    case captureSessionSetup(reason: String)
+    case processPoints(reason: String)
 }
 
-
+// MARK: Main
 final class CameraViewController: UIViewController{
     
     /// Use this property as view reference to access the view
@@ -29,6 +30,7 @@ final class CameraViewController: UIViewController{
     
     /// Capture camera flow of data
     private var cameraFeedSession: AVCaptureSession?
+    
     
     /// Controller to pick exacute thread
     private let videoDataOutputQueue = DispatchQueue(
@@ -44,34 +46,49 @@ final class CameraViewController: UIViewController{
     }()
     
     // 1
-    var pointsProcessorHandler: (([CGPoint]) -> Void)?
-    func processPoints(_ fingerTips: [CGPoint]) {
-      // 2
-      let convertedPoints = fingerTips.map {
-        cameraView.previewLayer.layerPointConverted(fromCaptureDevicePoint: $0)
-      }
-      // 3
-      pointsProcessorHandler?(convertedPoints)
+    public var depthPixelBuffer: CVPixelBuffer?
+    public var pointsProcessorHandler: (([CGPoint_3D]) -> Void)?
+    func processPoints(_ fingerJoints: [CGPoint], _ jointsName: [VNHumanHandPoseObservation.JointName]) {
+        
+        var finalpoints: [CGPoint_3D] = []
+        
+        if !fingerJoints.isEmpty, depthPixelBuffer != nil{
+            
+            let width = CVPixelBufferGetWidth(depthPixelBuffer!)
+            CVPixelBufferLockBaseAddress(depthPixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
+            let floatBuffer = unsafeBitCast(CVPixelBufferGetBaseAddress(depthPixelBuffer!), to: UnsafeMutablePointer<Float>.self)
+        
+            for (point, name) in zip(fingerJoints, jointsName){
+                let convertedPoint = cameraView.previewLayer.layerPointConverted(fromCaptureDevicePoint: point)
+                let pixelDepth = CGFloat(floatBuffer[Int(point.y * CGFloat(width) + point.x)])
+                finalpoints.append(CGPoint_3D(jointName: name, jointPos: convertedPoint, depth: pixelDepth))
+            }
+        }
+        // 3
+        pointsProcessorHandler?(finalpoints)
     }
+    
+    
+    
+    
 
     /// Creates the view that the controller manages
     override func loadView() {
-        print("load view")
         view = CameraPreview()
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        do {
+        do{
             if cameraFeedSession == nil {
                 try setupAVSession() // set cameraFeedSession
                 cameraView.previewLayer.session = cameraFeedSession
                 cameraView.previewLayer.videoGravity = .resizeAspectFill
-        }
-        cameraFeedSession?.startRunning() // makes camera feed visible
+            }
+            cameraFeedSession?.startRunning() // makes camera feed visible
         } catch {
-        print(error.localizedDescription)
+            print(error.localizedDescription)
         }
     }
 
@@ -80,9 +97,14 @@ final class CameraViewController: UIViewController{
         super.viewWillDisappear(animated)
     }
 
+}
+
+
+// MARK: Setup AVCapture Session
+extension CameraViewController{
     func setupAVSession() throws {
         // Check if the device has realword camera
-        guard let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
+        guard let videoDevice = AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back)
         else {
             throw AppError.captureSessionSetup(
                 reason: "Could not find a back facing camera."
@@ -121,7 +143,19 @@ final class CameraViewController: UIViewController{
             session.addOutput(dataOutput)
         } else {
             throw AppError.captureSessionSetup(
-                reason: "Could not add video data output to the session"
+                 reason: "Could not add video data output to the session"
+            )
+        }
+        
+        let depthOutput = AVCaptureDepthDataOutput()
+        if session.canAddOutput(depthOutput){
+            depthOutput.isFilteringEnabled = true
+            depthOutput.alwaysDiscardsLateDepthData = true
+            depthOutput.setDelegate(self, callbackQueue: videoDataOutputQueue)
+            session.addOutput(depthOutput)
+        } else {
+            throw AppError.captureSessionSetup(
+                reason: "Could not add depth data output to the session"
             )
         }
 
@@ -129,19 +163,20 @@ final class CameraViewController: UIViewController{
         session.commitConfiguration()
         cameraFeedSession = session
     }
-
-
 }
 
+
+// MARK: Video output delegate
 extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         
         var fingerJoints: [CGPoint] = []
+        var fingerNames: [VNHumanHandPoseObservation.JointName] = []
         
         // call before exit function
         defer {
           DispatchQueue.main.sync {
-            self.processPoints(fingerJoints)
+            self.processPoints(fingerJoints, fingerNames)
           }
         }
 
@@ -161,24 +196,39 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 return
             }
             
-            var recognizedPoints: [VNRecognizedPoint] = []
             try result.forEach{ observation in
-                let allJoints = try observation.recognizedPoints(.all)
-                allJoints.forEach{ joint in
-                    recognizedPoints.append(joint.value)
-                }
-            }
-            
-            recognizedPoints.forEach{ point in
-                if point.confidence > 0.9 {
-                    fingerJoints.append(CGPoint(x: 1 - point.location.x, y: 1 - point.location.y))
+                let joints = try observation.recognizedPoints(.all)
+                joints.forEach{ joint in
+                    if joint.value.confidence > 0.9{
+                        fingerNames.append(joint.key)
+                        fingerJoints.append(CGPoint(x: joint.value.location.x, y: 1 - joint.value.location.y))
+                    }
                 }
             }
         }catch{
             cameraFeedSession?.stopRunning()
         }
+    }
+}
+
+// MARK: Depth output delegate
+extension CameraViewController: AVCaptureDepthDataOutputDelegate{
+    public func depthDataOutput(_ output: AVCaptureDepthDataOutput, didOutput depthData: AVDepthData, timestamp: CMTime, connection: AVCaptureConnection) {
         
+        let depthDataType = kCVPixelFormatType_DepthFloat32
+        let convertedDepth: AVDepthData =
+        {
+            if depthData.depthDataType != depthDataType {
+                return depthData.converting(toDepthDataType: depthDataType)
+            }else{
+                return depthData
+            }
+        }()
+        let pixelBuffer = convertedDepth.depthDataMap
         
+        DispatchQueue.main.async {
+            self.depthPixelBuffer = pixelBuffer
+        }
         
     }
 }

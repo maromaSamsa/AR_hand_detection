@@ -33,19 +33,27 @@
 import SwiftUI
 
 struct FingersOverlay: Shape {
-  let points: [CGPoint]
-  private let pointsPath = UIBezierPath()
+    let fingerJoints: [CGPoint_3D]
+    private let pointsPath = UIBezierPath()
 
-  init(with points: [CGPoint]) {
-    self.points = points
-  }
-
-  func path(in rect: CGRect) -> Path {
-    for point in points {
-      pointsPath.move(to: point)
-      pointsPath.addArc(withCenter: point, radius: 5, startAngle: 0, endAngle: 2 * .pi, clockwise: true)
+    init(with points: [CGPoint_3D]) {
+        self.fingerJoints = points
+    }
+    
+    func path(in rect: CGRect) -> Path {
+    for joint in fingerJoints {
+        pointsPath.move(to: joint.point)
+        pointsPath.addArc(withCenter: joint.point, radius: 5, startAngle: 0, endAngle: 2 * .pi, clockwise: true)
+//        if joint.name == .wrist{
+//         print("wrist: ", (joint.depth * 100).rounded())
+//            let depth: NSString = "\((joint.depth * 100).rounded())" as NSString
+//            depth.draw(at: joint.point)
+//
+//        }
+        print(joint.depth)
+        
     }
 
-    return Path(pointsPath.cgPath)
+      return Path(pointsPath.cgPath)
   }
 }

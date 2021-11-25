@@ -9,11 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
     // ?
-    @State private var overlayPoints: [CGPoint] = []
+    @State private var overlayPoints: [CGPoint_3D] = []
     var body: some View {
         ZStack{
             CameraView {
-              overlayPoints = $0
+                // (([CGPoint_3D]) -> Void)?
+                overlayPoints = $0
             }
             .overlay(
               FingersOverlay(with: overlayPoints)

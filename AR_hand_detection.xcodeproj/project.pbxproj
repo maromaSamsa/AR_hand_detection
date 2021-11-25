@@ -15,6 +15,7 @@
 		C70C8BE2270EF824001EE73C /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70C8BE1270EF824001EE73C /* CameraViewController.swift */; };
 		C70C8BE4270EF887001EE73C /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70C8BE3270EF887001EE73C /* CameraView.swift */; };
 		C7C01F872728208000D2B0A9 /* FingersOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C01F862728208000D2B0A9 /* FingersOverlay.swift */; };
+		C7DEA04C274F28E9001A0B26 /* CGPoint_3D.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DEA04B274F28E9001A0B26 /* CGPoint_3D.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		C70C8BE3270EF887001EE73C /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		C7C01F862728208000D2B0A9 /* FingersOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FingersOverlay.swift; sourceTree = "<group>"; };
 		C7C01F88272A321100D2B0A9 /* ref.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ref.md; sourceTree = "<group>"; };
+		C7DEA04B274F28E9001A0B26 /* CGPoint_3D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPoint_3D.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 				C70C8BDD270EEC35001EE73C /* CameraPreview.swift */,
 				C70C8BE1270EF824001EE73C /* CameraViewController.swift */,
 				C70C8BE3270EF887001EE73C /* CameraView.swift */,
+				C7DEA04B274F28E9001A0B26 /* CGPoint_3D.swift */,
 			);
 			path = AR_hand_detection;
 			sourceTree = "<group>";
@@ -158,6 +161,7 @@
 				C70C8BCF270C2F10001EE73C /* ContentView.swift in Sources */,
 				C70C8BE4270EF887001EE73C /* CameraView.swift in Sources */,
 				C70C8BCD270C2F10001EE73C /* AR_hand_detectionApp.swift in Sources */,
+				C7DEA04C274F28E9001A0B26 /* CGPoint_3D.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
