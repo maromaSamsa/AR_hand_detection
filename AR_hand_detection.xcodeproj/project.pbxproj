@@ -15,6 +15,10 @@
 		C70C8BE2270EF824001EE73C /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70C8BE1270EF824001EE73C /* CameraViewController.swift */; };
 		C70C8BE4270EF887001EE73C /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70C8BE3270EF887001EE73C /* CameraView.swift */; };
 		C7C01F872728208000D2B0A9 /* FingersOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C01F862728208000D2B0A9 /* FingersOverlay.swift */; };
+		C7D9006227D718D500A51B46 /* ARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D9006127D718D500A51B46 /* ARViewContainer.swift */; };
+		C7D9006427D71A3400A51B46 /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D9006327D71A3400A51B46 /* ARViewController.swift */; };
+		C7D9006727D7220900A51B46 /* HandModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = C7D9006627D7220900A51B46 /* HandModel.mlmodel */; };
+		C7D9006927D76A4F00A51B46 /* HandDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D9006827D76A4F00A51B46 /* HandDetector.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +33,10 @@
 		C70C8BE3270EF887001EE73C /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		C7C01F862728208000D2B0A9 /* FingersOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FingersOverlay.swift; sourceTree = "<group>"; };
 		C7C01F88272A321100D2B0A9 /* ref.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ref.md; sourceTree = "<group>"; };
+		C7D9006127D718D500A51B46 /* ARViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewContainer.swift; sourceTree = "<group>"; };
+		C7D9006327D71A3400A51B46 /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
+		C7D9006627D7220900A51B46 /* HandModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = HandModel.mlmodel; sourceTree = "<group>"; };
+		C7D9006827D76A4F00A51B46 /* HandDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandDetector.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,15 +70,16 @@
 		C70C8BCB270C2F10001EE73C /* AR_hand_detection */ = {
 			isa = PBXGroup;
 			children = (
-				C7C01F862728208000D2B0A9 /* FingersOverlay.swift */,
+				C7D9006527D7220900A51B46 /* CoreML */,
+				C7D9006027D7153C00A51B46 /* unused */,
 				C70C8BCC270C2F10001EE73C /* AR_hand_detectionApp.swift */,
 				C70C8BCE270C2F10001EE73C /* ContentView.swift */,
 				C70C8BD0270C2F11001EE73C /* Assets.xcassets */,
 				C70C8BD5270C2F11001EE73C /* Info.plist */,
 				C70C8BD2270C2F11001EE73C /* Preview Content */,
-				C70C8BDD270EEC35001EE73C /* CameraPreview.swift */,
-				C70C8BE1270EF824001EE73C /* CameraViewController.swift */,
-				C70C8BE3270EF887001EE73C /* CameraView.swift */,
+				C7D9006127D718D500A51B46 /* ARViewContainer.swift */,
+				C7D9006327D71A3400A51B46 /* ARViewController.swift */,
+				C7D9006827D76A4F00A51B46 /* HandDetector.swift */,
 			);
 			path = AR_hand_detection;
 			sourceTree = "<group>";
@@ -81,6 +90,25 @@
 				C70C8BD3270C2F11001EE73C /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		C7D9006027D7153C00A51B46 /* unused */ = {
+			isa = PBXGroup;
+			children = (
+				C70C8BDD270EEC35001EE73C /* CameraPreview.swift */,
+				C70C8BE1270EF824001EE73C /* CameraViewController.swift */,
+				C70C8BE3270EF887001EE73C /* CameraView.swift */,
+				C7C01F862728208000D2B0A9 /* FingersOverlay.swift */,
+			);
+			path = unused;
+			sourceTree = "<group>";
+		};
+		C7D9006527D7220900A51B46 /* CoreML */ = {
+			isa = PBXGroup;
+			children = (
+				C7D9006627D7220900A51B46 /* HandModel.mlmodel */,
+			);
+			path = CoreML;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -155,7 +183,11 @@
 				C70C8BDE270EEC35001EE73C /* CameraPreview.swift in Sources */,
 				C7C01F872728208000D2B0A9 /* FingersOverlay.swift in Sources */,
 				C70C8BE2270EF824001EE73C /* CameraViewController.swift in Sources */,
+				C7D9006427D71A3400A51B46 /* ARViewController.swift in Sources */,
+				C7D9006227D718D500A51B46 /* ARViewContainer.swift in Sources */,
 				C70C8BCF270C2F10001EE73C /* ContentView.swift in Sources */,
+				C7D9006927D76A4F00A51B46 /* HandDetector.swift in Sources */,
+				C7D9006727D7220900A51B46 /* HandModel.mlmodel in Sources */,
 				C70C8BE4270EF887001EE73C /* CameraView.swift in Sources */,
 				C70C8BCD270C2F10001EE73C /* AR_hand_detectionApp.swift in Sources */,
 			);
@@ -295,7 +327,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Cloud.AR-hand-detection";
+				PRODUCT_BUNDLE_IDENTIFIER = com.maromasamsa.handMl2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -317,7 +349,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Cloud.AR-hand-detection";
+				PRODUCT_BUNDLE_IDENTIFIER = com.maromasamsa.handMl2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
