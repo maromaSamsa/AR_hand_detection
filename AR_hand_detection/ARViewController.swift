@@ -13,14 +13,18 @@ import Vision
 final public class ARViewController: UIViewController{
     
     private let sceneView = ARSCNView()
-    private var mask = UIImageView()
+    private var handView = UIImageView()
     private let handDetector = HandDetector()
     private var currentBuffer: CVPixelBuffer?
+    private var handMaskBuffer: CVPixelBuffer?
+    public let visionQueue = DispatchQueue.init(label: "vision queue")
     
     override public func loadView() {
         print("load view")
         super.loadView()
-        self.view = mask
+        self.view = sceneView
+        self.handView.contentMode = .topLeft
+        self.view.addSubview(handView)
     }
     
     override public func viewDidLoad() {
@@ -57,29 +61,64 @@ extension ARViewController: ARSessionDelegate{
         }
         self.currentBuffer = frame.capturedImage
         startDetection()
+        startRendering()
     }
-    private func startDetection() -> Void{
+    
+    /// Call CoreML hand detection model to start detection
+    private func startDetection() -> Void {
         guard let buffer = self.currentBuffer else{
             return
         }
         handDetector.performDetection(inputBuffer: buffer){
-            outputPixelBuffer in
-            
-            var previewImage: UIImage?
-            
-            guard let outputBuffer = outputPixelBuffer else{
-                return
+            outputBuffer in
+            self.handMaskBuffer = outputBuffer
+        }
+    }
+    
+    private func startRendering() -> Void {
+        guard let handBuffer = self.handMaskBuffer else{
+            return
+        }
+        guard let cameraBuffer = self.currentBuffer else{
+            return
+        }
+        
+        defer {
+            DispatchQueue.main.async {
+                self.handView.image = UIImage(ciImage: CIImage(cvPixelBuffer: handBuffer))
+                self.handMaskBuffer = nil
+                self.currentBuffer = nil
             }
-            defer{
-                DispatchQueue.main.async {
-                    self.mask.image = previewImage
-                    self.currentBuffer = nil
+        }
+        
+        CVPixelBufferLockBaseAddress(
+            handBuffer, CVPixelBufferLockFlags(rawValue: 0)
+        )
+
+        if CVPixelBufferGetBaseAddress(handBuffer) != nil {
+            let ptr = unsafeBitCast(CVPixelBufferGetBaseAddress(handBuffer), to: UnsafeMutablePointer<UInt8>.self)
+            let bytesPerRow = CVPixelBufferGetBytesPerRow(handBuffer)
+            let size = (
+                height: CVPixelBufferGetHeight(handBuffer),
+                width: CVPixelBufferGetWidth(handBuffer)
+            )
+
+            for y in stride(from: 0, to: size.height, by: 1){
+                for x in stride(from: 0, to: size.width, by: 1){
+                    ptr[(y * bytesPerRow + 4 * x) + 0] = 0 // b
+                    ptr[(y * bytesPerRow + 4 * x) + 1] = 255 // g
+                    ptr[(y * bytesPerRow + 4 * x) + 2] = 0 // r
+                    ptr[(y * bytesPerRow + 4 * x) + 3] = 255 // alpha
                 }
             }
-            
-            previewImage = UIImage(ciImage: CIImage(cvPixelBuffer: outputBuffer))
-            
+
+
         }
+
+        CVPixelBufferUnlockBaseAddress(
+            handBuffer, CVPixelBufferLockFlags(rawValue: 0)
+        )
+        
     }
     
 }

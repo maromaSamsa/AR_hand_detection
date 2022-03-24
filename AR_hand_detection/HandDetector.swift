@@ -28,7 +28,7 @@ final class HandDetector{
         
         let requestHandler = VNImageRequestHandler(cvPixelBuffer: inputBuffer, orientation: .right)
         
-        visionQueue.async {
+        //visionQueue.async {
             do{
                 try requestHandler.perform([self.predictionRequest])
                 guard let observation = self.predictionRequest.results?.first as? VNPixelBufferObservation else {
@@ -38,6 +38,6 @@ final class HandDetector{
             } catch {
                 output(nil)
             }
-        }
+        //}
     }
 }
