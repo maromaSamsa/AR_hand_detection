@@ -8,24 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
-    // ?
-    @State private var overlayPoints: [CGPoint] = []
     var body: some View {
-        ZStack{
-            CameraView {
-              overlayPoints = $0
-            }
-            .overlay(
-              FingersOverlay(with: overlayPoints)
-                .foregroundColor(.orange)
-            )
-            .edgesIgnoringSafeArea(.all)
+        VStack(alignment: .center){
+            ARViewContainer()
         }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        Group {
+            ContentView()
+        }
     }
 }
