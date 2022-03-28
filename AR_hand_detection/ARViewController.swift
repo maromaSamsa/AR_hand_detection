@@ -17,14 +17,15 @@ final public class ARViewController: UIViewController{
     private let handDetector = HandDetector()
     private var currentBuffer: CVPixelBuffer?
     private var handMaskBuffer: CVPixelBuffer?
-    public let visionQueue = DispatchQueue.init(label: "vision queue")
     
     override public func loadView() {
         print("load view")
         super.loadView()
+        handView.contentMode = .topLeft
+        sceneView.mask = handView
         self.view = sceneView
-        self.handView.contentMode = .topLeft
-        self.view.addSubview(handView)
+        //self.handView.contentMode = .topLeft
+        //self.view.addSubview(handView)
     }
     
     override public func viewDidLoad() {
@@ -75,6 +76,7 @@ extension ARViewController: ARSessionDelegate{
         }
     }
     
+    /// still designing, now is only for access hand mask buffer image, turning black pixel to transparent
     private func startRendering() -> Void {
         guard let handBuffer = self.handMaskBuffer else{
             return
@@ -82,33 +84,40 @@ extension ARViewController: ARSessionDelegate{
         guard let cameraBuffer = self.currentBuffer else{
             return
         }
-        
+
         defer {
             DispatchQueue.main.async {
-                self.handView.image = UIImage(ciImage: CIImage(cvPixelBuffer: handBuffer))
+                self.handView.image = UIImage(pixelBuffer: handBuffer)?.resized(to: CGSize(width: 828/2, height: 1792/2))
                 self.handMaskBuffer = nil
                 self.currentBuffer = nil
             }
         }
         
+        // You must call the CVPixelBufferLockBaseAddress(_:_:) function before accessing pixel data
         CVPixelBufferLockBaseAddress(
             handBuffer, CVPixelBufferLockFlags(rawValue: 0)
         )
 
         if CVPixelBufferGetBaseAddress(handBuffer) != nil {
+            // this pointer offset is count as size of byte
             let ptr = unsafeBitCast(CVPixelBufferGetBaseAddress(handBuffer), to: UnsafeMutablePointer<UInt8>.self)
             let bytesPerRow = CVPixelBufferGetBytesPerRow(handBuffer)
             let size = (
                 height: CVPixelBufferGetHeight(handBuffer),
                 width: CVPixelBufferGetWidth(handBuffer)
             )
-
+            
+            // in debug mode, use "stride" is more effient than using "for" loop
             for y in stride(from: 0, to: size.height, by: 1){
                 for x in stride(from: 0, to: size.width, by: 1){
-                    ptr[(y * bytesPerRow + 4 * x) + 0] = 0 // b
-                    ptr[(y * bytesPerRow + 4 * x) + 1] = 255 // g
-                    ptr[(y * bytesPerRow + 4 * x) + 2] = 0 // r
-                    ptr[(y * bytesPerRow + 4 * x) + 3] = 255 // alpha
+                    let offset = bytesPerRow * y + (bytesPerRow/size.width) * x
+                    if ptr[offset] == 0{
+                        ptr[offset + 3] = 0 // alpha
+                    }
+//                    ptr[offset + 0] = 0 // b
+//                    ptr[offset + 1] = 0 // g
+//                    ptr[offset + 2] = 0 // r
+//                    ptr[offset + 3] = 0 // alpha
                 }
             }
 

@@ -14,7 +14,6 @@
 		C70C8BDE270EEC35001EE73C /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70C8BDD270EEC35001EE73C /* CameraPreview.swift */; };
 		C70C8BE2270EF824001EE73C /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70C8BE1270EF824001EE73C /* CameraViewController.swift */; };
 		C70C8BE4270EF887001EE73C /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70C8BE3270EF887001EE73C /* CameraView.swift */; };
-		C7A7556627E9F1A3000FE787 /* CGImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A7556527E9F1A3000FE787 /* CGImageExtension.swift */; };
 		C7B460F427E1AF2300C91DF1 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7B460F327E1AF2300C91DF1 /* UIImageExtension.swift */; };
 		C7C01F872728208000D2B0A9 /* FingersOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C01F862728208000D2B0A9 /* FingersOverlay.swift */; };
 		C7D9006227D718D500A51B46 /* ARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D9006127D718D500A51B46 /* ARViewContainer.swift */; };
@@ -33,7 +32,7 @@
 		C70C8BDD270EEC35001EE73C /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
 		C70C8BE1270EF824001EE73C /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		C70C8BE3270EF887001EE73C /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
-		C7A7556527E9F1A3000FE787 /* CGImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGImageExtension.swift; sourceTree = "<group>"; };
+		C7A7556827F19E21000FE787 /* Log.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Log.md; sourceTree = "<group>"; };
 		C7B460F327E1AF2300C91DF1 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		C7C01F862728208000D2B0A9 /* FingersOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FingersOverlay.swift; sourceTree = "<group>"; };
 		C7D9006127D718D500A51B46 /* ARViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewContainer.swift; sourceTree = "<group>"; };
@@ -56,6 +55,7 @@
 		C70C8BC0270C2F10001EE73C = {
 			isa = PBXGroup;
 			children = (
+				C7A7556827F19E21000FE787 /* Log.md */,
 				C70C8BCB270C2F10001EE73C /* AR_hand_detection */,
 				C70C8BCA270C2F10001EE73C /* Products */,
 			);
@@ -99,7 +99,6 @@
 			isa = PBXGroup;
 			children = (
 				C7B460F327E1AF2300C91DF1 /* UIImageExtension.swift */,
-				C7A7556527E9F1A3000FE787 /* CGImageExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -199,7 +198,6 @@
 				C7B460F427E1AF2300C91DF1 /* UIImageExtension.swift in Sources */,
 				C7D9006227D718D500A51B46 /* ARViewContainer.swift in Sources */,
 				C70C8BCF270C2F10001EE73C /* ContentView.swift in Sources */,
-				C7A7556627E9F1A3000FE787 /* CGImageExtension.swift in Sources */,
 				C7D9006927D76A4F00A51B46 /* HandDetector.swift in Sources */,
 				C7D9006727D7220900A51B46 /* HandModel.mlmodel in Sources */,
 				C70C8BE4270EF887001EE73C /* CameraView.swift in Sources */,
