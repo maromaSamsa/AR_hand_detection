@@ -6,6 +6,7 @@
 //
 
 import ARKit
+import UIKit
 import CoreML
 import Vision
 
@@ -17,15 +18,15 @@ final public class ARViewController: UIViewController{
     private let handDetector = HandDetector()
     private var currentBuffer: CVPixelBuffer?
     private var handMaskBuffer: CVPixelBuffer?
+    private let testCameraView = UIImageView()
+    private let testCameraView_base = UIImageView()
     
     override public func loadView() {
         print("load view")
         super.loadView()
-        handView.contentMode = .topLeft
-        sceneView.mask = handView
-        self.view = sceneView
-        //self.handView.contentMode = .topLeft
-        //self.view.addSubview(handView)
+        self.view = testCameraView_base
+        testCameraView.frame = CGRect(x: 0.0, y: 0.0, width: 814.0, height: 413.999)
+        self.view.addSubview(testCameraView)
     }
     
     override public func viewDidLoad() {
@@ -33,6 +34,7 @@ final public class ARViewController: UIViewController{
         super.viewDidLoad()
         sceneView.delegate = self
         sceneView.session.delegate = self
+        sceneView.preferredFramesPerSecond = 20
     }
     
     override public func viewWillAppear(_ animated: Bool) {
@@ -87,7 +89,18 @@ extension ARViewController: ARSessionDelegate{
 
         defer {
             DispatchQueue.main.async {
-                self.handView.image = UIImage(pixelBuffer: handBuffer)?.resized(to: CGSize(width: 828/2, height: 1792/2))
+                let ci = CIImage(cvPixelBuffer: cameraBuffer)
+                let ui = UIImage(ciImage: ci)
+                self.testCameraView.image = ui
+                self.testCameraView.transform = CGAffineTransform.identity.scaledBy(x: -1, y: 1)
+                self.handView.image = UIImage(pixelBuffer: handBuffer)
+                self.handView.transform = CGAffineTransform.identity.rotated(by: -.pi/2)
+                self.handView.frame = self.testCameraView.bounds
+                self.testCameraView.mask = self.handView
+                print("subview f&b", self.testCameraView.frame, self.testCameraView.bounds)
+                self.testCameraView_base.image = ui
+                self.testCameraView_base.transform = CGAffineTransform.identity.rotated(by: .pi/2)
+                print("view f&b", self.testCameraView_base.frame, self.testCameraView_base.bounds)
                 self.handMaskBuffer = nil
                 self.currentBuffer = nil
             }
@@ -121,9 +134,7 @@ extension ARViewController: ARSessionDelegate{
                 }
             }
 
-
         }
-
         CVPixelBufferUnlockBaseAddress(
             handBuffer, CVPixelBufferLockFlags(rawValue: 0)
         )
