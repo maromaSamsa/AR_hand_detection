@@ -34,7 +34,7 @@ final public class ARViewController: UIViewController{
         super.viewDidLoad()
         sceneView.delegate = self
         sceneView.session.delegate = self
-        sceneView.preferredFramesPerSecond = 20
+        sceneView.preferredFramesPerSecond = 60
     }
     
     override public func viewWillAppear(_ animated: Bool) {
@@ -63,19 +63,11 @@ extension ARViewController: ARSessionDelegate{
             return
         }
         self.currentBuffer = frame.capturedImage
-        startDetection()
-        startRendering()
-    }
-    
-    /// Call CoreML hand detection model to start detection
-    private func startDetection() -> Void {
-        guard let buffer = self.currentBuffer else{
-            return
-        }
-        handDetector.performDetection(inputBuffer: buffer){
+        handDetector.performDetection(inputBuffer: self.currentBuffer!){
             outputBuffer in
             self.handMaskBuffer = outputBuffer
         }
+        startRendering()
     }
     
     /// still designing, now is only for access hand mask buffer image, turning black pixel to transparent
@@ -87,7 +79,7 @@ extension ARViewController: ARSessionDelegate{
             return
         }
 
-        defer {
+        //defer {
             DispatchQueue.main.async {
                 let ci = CIImage(cvPixelBuffer: cameraBuffer)
                 let ui = UIImage(ciImage: ci)
@@ -97,48 +89,14 @@ extension ARViewController: ARSessionDelegate{
                 self.handView.transform = CGAffineTransform.identity.rotated(by: -.pi/2)
                 self.handView.frame = self.testCameraView.bounds
                 self.testCameraView.mask = self.handView
-                print("subview f&b", self.testCameraView.frame, self.testCameraView.bounds)
+                //print("subview f&b", self.testCameraView.frame, self.testCameraView.bounds)
                 self.testCameraView_base.image = ui
                 self.testCameraView_base.transform = CGAffineTransform.identity.rotated(by: .pi/2)
-                print("view f&b", self.testCameraView_base.frame, self.testCameraView_base.bounds)
+                //print("view f&b", self.testCameraView_base.frame, self.testCameraView_base.bounds)
                 self.handMaskBuffer = nil
                 self.currentBuffer = nil
             }
-        }
-        
-        // You must call the CVPixelBufferLockBaseAddress(_:_:) function before accessing pixel data
-        CVPixelBufferLockBaseAddress(
-            handBuffer, CVPixelBufferLockFlags(rawValue: 0)
-        )
-
-        if CVPixelBufferGetBaseAddress(handBuffer) != nil {
-            // this pointer offset is count as size of byte
-            let ptr = unsafeBitCast(CVPixelBufferGetBaseAddress(handBuffer), to: UnsafeMutablePointer<UInt8>.self)
-            let bytesPerRow = CVPixelBufferGetBytesPerRow(handBuffer)
-            let size = (
-                height: CVPixelBufferGetHeight(handBuffer),
-                width: CVPixelBufferGetWidth(handBuffer)
-            )
-            
-            // in debug mode, use "stride" is more effient than using "for" loop
-            for y in stride(from: 0, to: size.height, by: 1){
-                for x in stride(from: 0, to: size.width, by: 1){
-                    let offset = bytesPerRow * y + (bytesPerRow/size.width) * x
-                    if ptr[offset] == 0{
-                        ptr[offset + 3] = 0 // alpha
-                    }
-//                    ptr[offset + 0] = 0 // b
-//                    ptr[offset + 1] = 0 // g
-//                    ptr[offset + 2] = 0 // r
-//                    ptr[offset + 3] = 0 // alpha
-                }
-            }
-
-        }
-        CVPixelBufferUnlockBaseAddress(
-            handBuffer, CVPixelBufferLockFlags(rawValue: 0)
-        )
-        
+        //}
     }
     
 }

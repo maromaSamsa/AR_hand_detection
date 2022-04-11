@@ -20,7 +20,7 @@ final class HandDetector{
             request.imageCropAndScaleOption = .scaleFill
             return request
         }catch{
-            fatalError("can't load Vision ML model: \(error)")
+            fatalError("Can't load Vision ML model: \(error)")
         }
     }()
     
@@ -28,16 +28,50 @@ final class HandDetector{
         
         let requestHandler = VNImageRequestHandler(cvPixelBuffer: inputBuffer, orientation: .right)
         
-        //visionQueue.async {
+        // Set to background thread
+        visionQueue.sync {
             do{
                 try requestHandler.perform([self.predictionRequest])
                 guard let observation = self.predictionRequest.results?.first as? VNPixelBufferObservation else {
                     fatalError("Unexpected result type from VNCoreMLRequest")
                 }
+                // You must call the CVPixelBufferLockBaseAddress(_:_:) function before accessing pixel data
+                CVPixelBufferLockBaseAddress(
+                    observation.pixelBuffer, CVPixelBufferLockFlags(rawValue: 0)
+                )
+
+                if CVPixelBufferGetBaseAddress(observation.pixelBuffer) != nil {
+                    // this pointer offset is count as size of byte
+                    let ptr = unsafeBitCast(CVPixelBufferGetBaseAddress(observation.pixelBuffer), to: UnsafeMutablePointer<UInt8>.self)
+                    let bytesPerRow = CVPixelBufferGetBytesPerRow(observation.pixelBuffer)
+                    let size = (
+                        height: CVPixelBufferGetHeight(observation.pixelBuffer),
+                        width: CVPixelBufferGetWidth(observation.pixelBuffer)
+                    )
+                    
+                    // in debug mode, use "stride" is more effient than using "for" loop
+                    for y in stride(from: 0, to: size.height, by: 1){
+                        for x in stride(from: 0, to: size.width, by: 1){
+                            let offset = bytesPerRow * y + (bytesPerRow/size.width) * x
+                            if ptr[offset] == 0{
+                                ptr[offset + 3] = 0 // alpha
+                            }
+        //                    ptr[offset + 0] // blue
+        //                    ptr[offset + 1] // green
+        //                    ptr[offset + 2] // red
+        //                    ptr[offset + 3] // alpha
+                        }
+                    }
+
+                }
+                CVPixelBufferUnlockBaseAddress(
+                    observation.pixelBuffer, CVPixelBufferLockFlags(rawValue: 0)
+                )
+
                 output(observation.pixelBuffer)
             } catch {
                 output(nil)
             }
-        //}
+        }
     }
 }
