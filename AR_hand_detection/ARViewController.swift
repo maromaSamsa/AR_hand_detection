@@ -24,9 +24,14 @@ final public class ARViewController: UIViewController{
     override public func loadView() {
         print("load view")
         super.loadView()
-        self.view = testCameraView_base
-        testCameraView.frame = CGRect(x: 0.0, y: 0.0, width: 814.0, height: 413.999)
-        self.view.addSubview(testCameraView)
+        self.view = self.testCameraView_base
+        self.view.addSubview(self.testCameraView)
+    }
+    
+    override public func viewDidLayoutSubviews() {
+        print("view did layout subviews")
+        self.testCameraView.frame = self.view.bounds
+        self.handView.frame = self.testCameraView.bounds
     }
     
     override public func viewDidLoad() {
@@ -35,6 +40,11 @@ final public class ARViewController: UIViewController{
         sceneView.delegate = self
         sceneView.session.delegate = self
         sceneView.preferredFramesPerSecond = 60
+        
+        self.testCameraView_base.transform = CGAffineTransform.identity.rotated(by: .pi/2)
+        self.testCameraView.transform = CGAffineTransform.identity.scaledBy(x: -1, y: 1)
+        self.handView.transform = CGAffineTransform.identity.rotated(by: -.pi/2)
+        self.testCameraView.mask = self.handView
     }
     
     override public func viewWillAppear(_ animated: Bool) {
@@ -62,6 +72,13 @@ extension ARViewController: ARSessionDelegate{
         guard self.currentBuffer == nil, case .normal = frame.camera.trackingState else {
             return
         }
+        defer {
+            //print(frame.timestamp) // testing fps
+            DispatchQueue.main.async {
+                self.handMaskBuffer = nil
+                self.currentBuffer = nil
+            }
+        }
         self.currentBuffer = frame.capturedImage
         handDetector.performDetection(inputBuffer: self.currentBuffer!){
             outputBuffer in
@@ -70,7 +87,6 @@ extension ARViewController: ARSessionDelegate{
         startRendering()
     }
     
-    /// still designing, now is only for access hand mask buffer image, turning black pixel to transparent
     private func startRendering() -> Void {
         guard let handBuffer = self.handMaskBuffer else{
             return
@@ -78,25 +94,15 @@ extension ARViewController: ARSessionDelegate{
         guard let cameraBuffer = self.currentBuffer else{
             return
         }
-
-        //defer {
-            DispatchQueue.main.async {
-                let ci = CIImage(cvPixelBuffer: cameraBuffer)
-                let ui = UIImage(ciImage: ci)
-                self.testCameraView.image = ui
-                self.testCameraView.transform = CGAffineTransform.identity.scaledBy(x: -1, y: 1)
-                self.handView.image = UIImage(pixelBuffer: handBuffer)
-                self.handView.transform = CGAffineTransform.identity.rotated(by: -.pi/2)
-                self.handView.frame = self.testCameraView.bounds
-                self.testCameraView.mask = self.handView
-                //print("subview f&b", self.testCameraView.frame, self.testCameraView.bounds)
-                self.testCameraView_base.image = ui
-                self.testCameraView_base.transform = CGAffineTransform.identity.rotated(by: .pi/2)
-                //print("view f&b", self.testCameraView_base.frame, self.testCameraView_base.bounds)
-                self.handMaskBuffer = nil
-                self.currentBuffer = nil
-            }
-        //}
+        DispatchQueue.main.async {
+            let ci = CIImage(cvPixelBuffer: cameraBuffer)
+            let ui = UIImage(ciImage: ci)
+            self.testCameraView.image = ui
+            self.handView.image = UIImage(pixelBuffer: handBuffer)
+            self.testCameraView_base.image = ui
+            //print("subview f&b", self.testCameraView.frame.size, self.testCameraView.bounds.size)
+            //print("view f&b", self.testCameraView_base.frame, self.testCameraView_base.bounds)
+        }
     }
     
 }
