@@ -1,53 +1,40 @@
-# Log 28/03/2022
+# Log May 9, 2022
+---
 
 ## Progress
- - Now have ability to access 112\*112 mask each ARGB pixel generated from MobileNet V2
- - And sucessfully create an hand mask, but have some problem
- - Realization on CIImage, CGImage and CVPixelBuffer
+ - Now we can set ARSCNView as the main view
+ - Fixed problem: mirror hand size isn't fit the main view
+ - Find: coordinates of bounds will transform if you set non-identity transform
 
-:::info
-#### CIImage: 
-- Can applying certain filter to produce an UIImage
-- Does not contain any info about Image raw data
-- Cooperation with other Core Image class (e.g. CIFilter, CIContext, CIVector, CIColor)
-> *" Although a CIImage object has image data associated with it, it is not an image. You can think of a CIImage object as an image “recipe.” A CIImage object has all the information necessary to produce an image "*
-:::
+## future progress
 
+### topic on performance
+ - to hand mask, use CAlayer to render instead of UIImage view
+ 
+### Auto layout
+To develop headset view (cardboard) in the future, the following layout problem should be clarified: 
+ - Relationship between frame and bounds coordinates
+ - Relationship between bounds and content mode
 
-[CVPixelBuffer的創建數據填充以及數據讀取](https://www.zendei.com/article/36867.html)
+### Transformation formula
+For developing cardboard mode in the future:
+ - Barrel Distortion implementation
 
-[Swift-技巧（八）CVPixelBuffer To CGImage](https://www.gushiciku.cn/pl/a2fk/zh-tw)
+### New Feature
+ - Hand motion detection
+ - Hand skeleton rendering
+ - Virtual object placing using ARTag
+ 
+## Document
+---
+The following scripts are recommended to read
 
-[Video Toolbox：读写解码回调函数CVImageBufferRef的YUV图像](https://www.cxyzjd.com/article/weixin_34148508/86083668)
-
-
-[Resize a CVPixelBuffer](https://stackoverflow.com/questions/44509385/resize-a-cvpixelbuffer)
-
-
-
-## Encounter Problems
- 1. **ARViewController :: startDetection()**
-     Dispatch Queue configuration let **self.handMaskBuffer** remain **nil** before entering **startRendering()**, this cause unable to show preview
-     
- 2. **ARViewController :: startRendering()**
-     Unable access camera CVPixelBuffer, the reason is this image is on [**YUV 8-bit 4:2:0**](https://developer.apple.com/documentation/corevideo/1563591-pixel_format_identifiers/kcvpixelformattype_420ypcbcr8biplanarfullrange) format rather than ARGB, in this type color model, 1 pixel ~= 1.502 byte in average, method base on byte-wise access to rendering is invalid
-     
- 3. **Mask cannot fit camera preview hand contour**
-     Suspection on mask size isn't fit cmaera preview size
-     > For CoreMl, the input frame, camera CVPixelBuffer, has a unexpectable size w \* h = 1920 \* 1440, which isn't fit iPhone11 screan size 1792 \* 828, so we can assume the output mask 112 \* 112 has to seen 1920 \* 1440 as reference
-
-## Future Plan
- - Not to deep dive into YUV rendering, try anothar way
- - One alternative plan is directely capture the frame which has adding an hand contour mask, do mirror transformation and add on top of **self.view** by calling **addSubview()** method
- - Make sure the black region of this hand contour mask image is ***alpha = 0***, means those pixels are transparent, would not cover **self.view** preview
- - Prepare add hand joint rendering we have done in last semester (**see git branch: Reconstruct_3D**)
-
-1. Solve **Encounter Problems [1], [3]**, specially [3]
-2. Check hand contour mask image can be used to be a subview and would not bolck origin **self.view** preview
-
-:::info
-**self.view** in **ARViewController :: loadView()**
-This property represents the root view of the view controller's view hierarchy. The default value of this property is nil.
-:::
-
+1. [CALayer](https://developer.apple.com/documentation/quartzcore/calayer):
+    this class is used for rendering a view, and also is the main subclass under UIView class for illustration
+> CALayer 提供較底層的 APIs ，讓開發者能更彈性的做出自己想要的功能
+> CALayer 的存在，使得iOS可以快速且輕易在應用程式的 View 層次結構中抓取 bitmap 資訊
+> 丟給 Core Graphics 進行下一步作業，最終由 OpenGL 處理後呈現至裝置螢幕上
+    
+2. [Auto layout](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/AutolayoutPG/index.html)
+    also the concept of frame, bounds, and content mode in UIView
 
