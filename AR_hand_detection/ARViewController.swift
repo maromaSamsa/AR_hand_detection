@@ -14,26 +14,29 @@ import Vision
 final public class ARViewController: UIViewController{
     
     private let sceneView = ARSCNView()
-    private var handView = UIImageView()
+    private let handView = UIImageView()
     private let handDetector = HandDetector()
     private var currentBuffer: CVPixelBuffer?
     private var handMaskBuffer: CVPixelBuffer?
     private let testCameraView = UIImageView()
-    private let testCameraView_base = UIImageView()
     
     override public func loadView() {
         print("load view")
         super.loadView()
-        self.view = self.testCameraView_base
-        self.view.addSubview(self.testCameraView)
+        self.view.backgroundColor = .black
+        self.view.addSubview(sceneView)
+        self.sceneView.addSubview(testCameraView)
     }
     
     override public func viewDidLayoutSubviews() {
         print("view did layout subviews")
-        self.testCameraView.frame = self.view.bounds
-        self.handView.frame = self.testCameraView.bounds
+        self.testCameraView.contentMode = .scaleAspectFill
+        self.sceneView.frame = self.view.bounds
+        self.testCameraView.frame = self.sceneView.bounds
+        self.handView.frame = CGRect(x: 0.0, y: -98.25, width: 814.0, height: 610.5)
+        //self.handView.frame = self.testCameraView.bounds
     }
-    
+
     override public func viewDidLoad() {
         print("view did load")
         super.viewDidLoad()
@@ -41,10 +44,9 @@ final public class ARViewController: UIViewController{
         sceneView.session.delegate = self
         sceneView.preferredFramesPerSecond = 60
         
-        self.testCameraView_base.transform = CGAffineTransform.identity.rotated(by: .pi/2)
-        self.testCameraView.transform = CGAffineTransform.identity.scaledBy(x: -1, y: 1)
-        self.handView.transform = CGAffineTransform.identity.rotated(by: -.pi/2)
+        self.testCameraView.transform = CGAffineTransform.identity.rotated(by: .pi/2).scaledBy(x: -1, y: 1)
         self.testCameraView.mask = self.handView
+//        self.testCameraView.layer.mask = self.handView.layer // also avaliable, maybe will decrease memory spending
     }
     
     override public func viewWillAppear(_ animated: Bool) {
@@ -62,6 +64,7 @@ final public class ARViewController: UIViewController{
         super.viewWillDisappear(animated)
         sceneView.session.pause()
     }
+    
 }
 
 // MARK: ARSessionDelegate
@@ -99,9 +102,6 @@ extension ARViewController: ARSessionDelegate{
             let ui = UIImage(ciImage: ci)
             self.testCameraView.image = ui
             self.handView.image = UIImage(pixelBuffer: handBuffer)
-            self.testCameraView_base.image = ui
-            //print("subview f&b", self.testCameraView.frame.size, self.testCameraView.bounds.size)
-            //print("view f&b", self.testCameraView_base.frame, self.testCameraView_base.bounds)
         }
     }
     
@@ -110,6 +110,8 @@ extension ARViewController: ARSessionDelegate{
 extension ARViewController: ARSCNViewDelegate{
 
 }
+
+
 
 
 

@@ -26,7 +26,7 @@ final class HandDetector{
     
     public func performDetection(inputBuffer: CVPixelBuffer, output: @escaping (CVPixelBuffer?) -> Void ) -> Void {
         
-        let requestHandler = VNImageRequestHandler(cvPixelBuffer: inputBuffer, orientation: .right)
+        let requestHandler = VNImageRequestHandler(cvPixelBuffer: inputBuffer, orientation: .up)
         
         // Set to background thread
         visionQueue.sync {
