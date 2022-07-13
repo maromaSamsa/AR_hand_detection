@@ -2,23 +2,29 @@
 //  ContentView.swift
 //  AR_hand_detection
 //
-//  Created by WTMH on 2021/10/5.
-//
+//  Created by maromasamsa on 2022/7/14.
 
 import SwiftUI
+import ARHeadsetKit
+import Metal
 
 struct ContentView: View {
     var body: some View {
-        VStack(alignment: .center){
-            ARViewContainer()
-        }
+        let description = AppCoordinator.AppDescription(name: "Demo App")
+        ARContentView<EmptySettingsView>().environmentObject(Coordinator(appDescription: description))
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            ContentView()
-        }
+class My_MainRenderer: MainRenderer{
+    override class var interfaceDepth: Float{ 0.9 }
+    
+}
+
+class Coordinator: AppCoordinator{
+    override var makeMainRenderer: AppCoordinator.MainRendererInitializer{
+        My_MainRenderer.init
     }
 }
+
+
+
