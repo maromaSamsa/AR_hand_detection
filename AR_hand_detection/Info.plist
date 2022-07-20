@@ -35,8 +35,8 @@
 	<dict/>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
-		<string>armv7</string>
 		<string>arkit</string>
+		<string>iphone-ipad-minimum-performance-a12</string>
 	</array>
 	<key>UIRequiresFullScreen</key>
 	<true/>
