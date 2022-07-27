@@ -24,6 +24,8 @@
 		C7DAD4DE287F398400141336 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C7DAD4DD287F398400141336 /* Launch Screen.storyboard */; };
 		C7DAD4E0287F39C400141336 /* ARHeadsetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7DAD4DA287F38BF00141336 /* ARHeadsetKit.framework */; };
 		C7DAD4E1287F39C400141336 /* ARHeadsetKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C7DAD4DA287F38BF00141336 /* ARHeadsetKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C7DAD4EF288EA7D700141336 /* ARInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DAD4EE288EA7D700141336 /* ARInterface.swift */; };
+		C7DAD4F1288EB1B000141336 /* MTCustomRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DAD4F0288EB1B000141336 /* MTCustomRenderer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +72,8 @@
 		C7DAD4D5287F38BF00141336 /* ARHeadsetKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ARHeadsetKit.xcodeproj; path = ARHeadsetKit/ARHeadsetKit.xcodeproj; sourceTree = "<group>"; };
 		C7DAD4DB287F395600141336 /* Metal_Utilities_Combined.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = Metal_Utilities_Combined.metal; path = ARHeadsetKit/Metal_Utilities_Combined.metal; sourceTree = SOURCE_ROOT; };
 		C7DAD4DD287F398400141336 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "ARHeadsetKit/Launch Screen.storyboard"; sourceTree = SOURCE_ROOT; };
+		C7DAD4EE288EA7D700141336 /* ARInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARInterface.swift; sourceTree = "<group>"; };
+		C7DAD4F0288EB1B000141336 /* MTCustomRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTCustomRenderer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +110,7 @@
 		C70C8BCB270C2F10001EE73C /* AR_hand_detection */ = {
 			isa = PBXGroup;
 			children = (
+				C7DAD4E9288E920200141336 /* ARInterface */,
 				C7DAD4DD287F398400141336 /* Launch Screen.storyboard */,
 				C7DAD4DB287F395600141336 /* Metal_Utilities_Combined.metal */,
 				C7B460F227E1AF0100C91DF1 /* Extension */,
@@ -113,6 +118,7 @@
 				C7D9006027D7153C00A51B46 /* unused */,
 				C70C8BCC270C2F10001EE73C /* AR_hand_detectionApp.swift */,
 				C70C8BCE270C2F10001EE73C /* ContentView.swift */,
+				C7DAD4F0288EB1B000141336 /* MTCustomRenderer.swift */,
 				C70C8BD0270C2F11001EE73C /* Assets.xcassets */,
 				C70C8BD5270C2F11001EE73C /* Info.plist */,
 				C70C8BD2270C2F11001EE73C /* Preview Content */,
@@ -171,6 +177,14 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C7DAD4E9288E920200141336 /* ARInterface */ = {
+			isa = PBXGroup;
+			children = (
+				C7DAD4EE288EA7D700141336 /* ARInterface.swift */,
+			);
+			path = ARInterface;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,9 +276,11 @@
 			files = (
 				C70C8BDE270EEC35001EE73C /* CameraPreview.swift in Sources */,
 				C7DAD4DC287F395600141336 /* Metal_Utilities_Combined.metal in Sources */,
+				C7DAD4F1288EB1B000141336 /* MTCustomRenderer.swift in Sources */,
 				C7C01F872728208000D2B0A9 /* FingersOverlay.swift in Sources */,
 				C70C8BE2270EF824001EE73C /* CameraViewController.swift in Sources */,
 				C7D9006427D71A3400A51B46 /* ARViewController.swift in Sources */,
+				C7DAD4EF288EA7D700141336 /* ARInterface.swift in Sources */,
 				C7B460F427E1AF2300C91DF1 /* UIImageExtension.swift in Sources */,
 				C7D9006227D718D500A51B46 /* ARViewContainer.swift in Sources */,
 				C70C8BCF270C2F10001EE73C /* ContentView.swift in Sources */,
