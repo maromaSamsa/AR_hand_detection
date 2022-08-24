@@ -10,19 +10,22 @@ import Metal
 
 struct ContentView: View {
     var body: some View {
-        let description = AppCoordinator.AppDescription(name: "Demo App")
+        let description = AppCoordinator.AppDescription(name: "ARMT APP")
         ARContentView<EmptySettingsView>().environmentObject(Coordinator(appDescription: description))
     }
 }
 
-class My_MainRenderer: MainRenderer{
-    override class var interfaceDepth: Float{ 0.9 }
-    
+class MTMainRenderer: MainRenderer{
+    override class var interfaceDepth: Float{ 0.7 }
+    override var makeCustomRenderer: CustomRendererInitializer{
+        MTCustomRenderer.init
+    }
 }
+
 
 class Coordinator: AppCoordinator{
     override var makeMainRenderer: AppCoordinator.MainRendererInitializer{
-        My_MainRenderer.init
+        MTMainRenderer.init
     }
 }
 
