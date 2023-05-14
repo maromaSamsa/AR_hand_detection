@@ -419,7 +419,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"AR_hand_detection/Preview Content\"";
-				DEVELOPMENT_TEAM = 5LH268XP39;
+				DEVELOPMENT_TEAM = QULCGY75N4;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = AR_hand_detection/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -427,7 +427,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.wtmh.armt-app";
+				PRODUCT_BUNDLE_IDENTIFIER = com.maromasamsa.armt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -443,7 +443,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"AR_hand_detection/Preview Content\"";
-				DEVELOPMENT_TEAM = 5LH268XP39;
+				DEVELOPMENT_TEAM = QULCGY75N4;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = AR_hand_detection/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -451,7 +451,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.wtmh.armt-app";
+				PRODUCT_BUNDLE_IDENTIFIER = com.maromasamsa.armt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

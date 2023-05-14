@@ -13,3 +13,10 @@ AR_hand_detection.xcodeproj/xcuserdata/wtmh.xcuserdatad/xcdebugger/Breakpoints_v
 *.xcbkptlist
 AR_hand_detection.xcodeproj/project.xcworkspace/xcuserdata/wtmh.xcuserdatad/UserInterfaceState.xcuserstate
 ARHeadsetKit/
+AR_hand_detection.xcodeproj/project.pbxproj
+AR_hand_detection.xcodeproj/project.xcworkspace/xcuserdata/wtmh.xcuserdatad/UserInterfaceState.xcuserstate
+AR_hand_detection.xcodeproj/project.pbxproj
+*.pbxproj
+*.xcuserstate
+*.xcbkptlist
+*.plist
