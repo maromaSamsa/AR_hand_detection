@@ -35,6 +35,7 @@ class Coordinator: AppCoordinator{
             if self.semaphore.wait(timeout: .distantFuture) == .success {
                 if self.isRecording && !self.settingsAreShown{
                     print(NSDate(), self.handIsDetected)
+                    self.showMirroredHand = !self.showMirroredHand
                 }
                 sleep(1)
                 self.semaphore.signal()
