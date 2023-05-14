@@ -20,3 +20,5 @@ AR_hand_detection.xcodeproj/project.pbxproj
 *.xcuserstate
 *.xcbkptlist
 *.plist
+*.xcuserstate
+*.plist
